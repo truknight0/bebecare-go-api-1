@@ -70,6 +70,5 @@ func DEBUG(msg string) {
 
 func parseFilePath(fPath string) (fileName string) {
 	_, fileName = filepath.Split(fPath)
-
 	return
 }
