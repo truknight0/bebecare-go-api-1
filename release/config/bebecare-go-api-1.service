@@ -1,0 +1,16 @@
+[Unit]
+Description=bebecare go api 1
+After=network.target
+
+[Service]
+User=ubuntu
+ExecStart=/home/ubuntu/bebecare-go-api-1/bin/startup.sh
+ExecStop=/home/ubuntu/bebecare-go-api-1/bin/shutdown.sh
+WorkingDirectory=/home/ubuntu/bebecare-go-api-1
+Type=forking
+Restart=on-failure
+RestartSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
