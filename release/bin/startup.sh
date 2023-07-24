@@ -15,7 +15,7 @@ if [ $Cnt -ne 0 ]
 then
    echo "$DATE : $SERVICE_NAME(PID : $PROCESS) is already running"
 else
-   nohup $BEBECARE_GO_API_1_HOME/bin/openapi-server -service=$SERVICE_NAME >> $BEBECARE_GO_API_1_HOME/logs/openapi-server.log 2>&1 &
+   nohup $BEBECARE_GO_API_1_HOME/bin/bebecare-go-api-1-server -service=$SERVICE_NAME >> $BEBECARE_GO_API_1_HOME/logs/bebecare-go-api-1-server.log 2>&1 &
    echo "$DATE : $SERVICE_NAME startup"
 fi
 
