@@ -85,6 +85,7 @@ func CheckUser(c *gin.Context) {
 
 		// 토큰이 없으면 신규 회원가입
 		insertData := new(db_object.InsertUser)
+		insertData.Trx = trx
 		insertData.Name = request.Name
 		insertData.Phone = request.Phone
 		insertData.Role = request.Role
@@ -119,7 +120,7 @@ func CheckUser(c *gin.Context) {
 		tokenArr := strings.Split(authHeader, " ")
 		checkToken := tokenArr[1]
 		var userToken string
-		userToken, err := userModel.GetUserInfoWithToken(checkToken)
+		userToken, err := userModel.GetUserTokenWithToken(checkToken)
 		if err != nil {
 			response.Code = constants.ERR_DB_NODATA
 			response.Message = constants.GetResponseMsg(constants.ERR_DB_NODATA)

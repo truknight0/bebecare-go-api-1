@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bebecare-go-api-1/beans/constants"
 	"bebecare-go-api-1/controllers/bebecare"
 	"bebecare-go-api-1/service/middleware"
 	"bebecare-go-api-1/utils/config"
@@ -20,9 +19,10 @@ func main() {
 	}
 
 	bebecareMainAPI := g.Group("/api/bebecare/service")
-	bebecareMainAPI.Use(middleware.CreateTokenAuthorizer(constants.APP_JASMINE))
+	bebecareMainAPI.Use(middleware.CreateTokenAuthorizer())
 	{
 		bebecareMainAPI.POST("/get_user", bebecare.GetUser)
+		bebecareMainAPI.POST("/children/insert", bebecare.InsertChildren)
 	}
 
 	port := config.GetStringDefault("server.port", "8080")

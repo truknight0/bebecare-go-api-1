@@ -11,43 +11,7 @@ import (
 
 const TOKEN_TYPE = "Bearer"
 
-func tokenAuthorized(c *gin.Context) {
-	response := new(beans.BaseResponse)
-	authHeader := c.GetHeader("Authorization")
-	if authHeader == "" {
-		response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN
-		response.Message = constants.GetResponseMsg(constants.ERR_LOGIN_UNAUTHORIZED_TOKEN)
-		c.AbortWithStatusJSON(http.StatusOK, response)
-		return
-	}
-
-	authKeys := strings.Split(authHeader, " ")
-	if strings.Compare(authKeys[0], TOKEN_TYPE) != 0 {
-		response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN
-		response.Message = constants.GetResponseMsg(constants.ERR_LOGIN_UNAUTHORIZED_TOKEN)
-		c.AbortWithStatusJSON(http.StatusOK, response)
-		return
-	}
-	if authKeys[1] == "" {
-		response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN
-		response.Message = constants.GetResponseMsg(constants.ERR_LOGIN_UNAUTHORIZED_TOKEN)
-		c.AbortWithStatusJSON(http.StatusOK, response)
-		return
-	}
-
-	authToken := authKeys[1]
-	_, err := model.SelectValidToken(authToken)
-	if err != nil {
-		response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN
-		response.Message = constants.GetResponseMsg(constants.ERR_LOGIN_UNAUTHORIZED_TOKEN)
-		c.AbortWithStatusJSON(http.StatusOK, response)
-		return
-	}
-
-	c.Next()
-}
-
-func CreateTokenAuthorizer(appName string) gin.HandlerFunc {
+func CreateTokenAuthorizer() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		response := new(beans.BaseResponse)
 		authHeader := c.GetHeader("Authorization")
@@ -73,14 +37,8 @@ func CreateTokenAuthorizer(appName string) gin.HandlerFunc {
 		}
 
 		authToken := authKeys[1]
-		token, err := model.SelectValidToken(authToken)
+		_, err := model.SelectValidToken(authToken)
 		if err != nil {
-			response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN
-			response.Message = constants.GetResponseMsg(constants.ERR_LOGIN_UNAUTHORIZED_TOKEN)
-			c.AbortWithStatusJSON(http.StatusOK, response)
-			return
-		}
-		if strings.Compare(token.ApplicationName, appName) != 0 {
 			response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN
 			response.Message = constants.GetResponseMsg(constants.ERR_LOGIN_UNAUTHORIZED_TOKEN)
 			c.AbortWithStatusJSON(http.StatusOK, response)

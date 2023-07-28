@@ -11,13 +11,13 @@ func GetUserInfo(name, phone, role string) (*db_object.UserInfo, error) {
 	userInfo := new(db_object.UserInfo)
 
 	err := db.DB.Get(userInfo, `
-		SELECT	
+		SELECT	idx,
 			name,
 		    phone,
 		    role,
 		    DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') as created_at
 		FROM
-			member
+			user
 		WHERE
 			name = ?
 			AND phone = ?
@@ -29,7 +29,31 @@ func GetUserInfo(name, phone, role string) (*db_object.UserInfo, error) {
 	return userInfo, nil
 }
 
-func GetUserInfoWithToken(token string) (string, error) {
+func GetUserInfoWithToken(token string) (*db_object.UserInfoWithToken, error) {
+	userInfo := new(db_object.UserInfoWithToken)
+
+	query := `
+		SELECT us.idx,
+		       us.name,
+		       us.phone,
+		       us.role,
+		       us.created_at,
+		       at.token
+		FROM auth_token AS at
+		LEFT JOIN user AS us ON at.user_idx = us.idx
+		WHERE at.token = ?
+			AND DATE_FORMAT(at.expire_date, '%Y-%m-%d %H:%i:%s') >= NOW()`
+
+	err := db.DB.Get(userInfo, query, token)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return nil, err
+	}
+	return userInfo, nil
+}
+
+func GetUserTokenWithToken(token string) (string, error) {
 	var getToken string
 	query := `
 		SELECT token 
@@ -51,7 +75,7 @@ func GetUserToken(name, phone, role string) (string, error) {
 	query := `
 		SELECT at.token 
 		FROM auth_token AS at
-		LEFT JOIN member AS mb ON at.member_idx = mb.idx
+		LEFT JOIN user AS mb ON at.user_idx = mb.idx
 		WHERE mb.name = ?
 			AND mb.phone = ?
 			AND mb.role = ?
@@ -69,7 +93,7 @@ func GetUserToken(name, phone, role string) (string, error) {
 
 func InsertUser(insertUser *db_object.InsertUser) (int, error) {
 	query := `
-		INSERT INTO member
+		INSERT INTO user
 		SET 
 			name = :name,
 			phone = :phone,
@@ -85,8 +109,8 @@ func InsertUser(insertUser *db_object.InsertUser) (int, error) {
 		fmt.Println(err.Error())
 		return 0, err
 	}
-	affectedRows, _ := r.LastInsertId()
-	return int(affectedRows), nil
+	insertId, _ := r.LastInsertId()
+	return int(insertId), nil
 }
 
 func InsertToken(userIdx int, token string) error {
@@ -94,7 +118,7 @@ func InsertToken(userIdx int, token string) error {
 		INSERT INTO auth_token
 		SET
 		    token = ?,
-			member_idx = ?`
+			user_idx = ?`
 	_, err := db.DB.Exec(query, token, userIdx)
 
 	if err != nil {
