@@ -66,3 +66,9 @@ func InsertChildren(c *gin.Context) {
 	trx.Commit()
 	http_util.JsonResponse(c, http.StatusOK, response)
 }
+
+func UpdateChildren(c *gin.Context) {
+	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+
+	http_util.JsonResponse(c, http.StatusOK, response)
+}
