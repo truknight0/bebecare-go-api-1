@@ -11,3 +11,8 @@ type GetUserResponse struct {
 type CheckUserResponse struct {
 	beans.BaseResponse
 }
+
+type SetUserToken struct {
+	IsFirstUser bool   `json:"isFirstUser"`
+	Token       string `json:"token"`
+}

@@ -14,10 +14,6 @@ import (
 	"strings"
 )
 
-type Token struct {
-	Token string `json:"token"`
-}
-
 func GetUser(c *gin.Context) {
 	response := user.GetUserResponse{
 		BaseResponse: beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)},
@@ -50,6 +46,8 @@ func CheckUser(c *gin.Context) {
 		BaseResponse: beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)},
 	}
 
+	var isFirstUser bool
+
 	trx, _ := db.DB.Beginx()
 	defer trx.Rollback()
 
@@ -76,7 +74,8 @@ func CheckUser(c *gin.Context) {
 				http_util.JsonResponse(c, http.StatusOK, response)
 				return
 			}
-			jsonToken := Token{userToken}
+			isFirstUser = false
+			jsonToken := user.SetUserToken{IsFirstUser: isFirstUser, Token: userToken}
 			response.Data = jsonToken
 
 			http_util.JsonResponse(c, http.StatusOK, response)
@@ -112,7 +111,8 @@ func CheckUser(c *gin.Context) {
 		trx.Commit()
 
 		// 토큰 리턴
-		jsonToken := Token{token}
+		isFirstUser = true
+		jsonToken := user.SetUserToken{IsFirstUser: isFirstUser, Token: token}
 		response.Data = jsonToken
 
 	} else {
@@ -129,7 +129,8 @@ func CheckUser(c *gin.Context) {
 		}
 
 		// 토큰 리턴
-		jsonToken := Token{userToken}
+		isFirstUser = false
+		jsonToken := user.SetUserToken{IsFirstUser: isFirstUser, Token: userToken}
 		response.Data = jsonToken
 	}
 

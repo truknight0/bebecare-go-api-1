@@ -13,7 +13,7 @@ func main() {
 	g.Use(gin.Logger())
 
 	// ROUTE Setting
-	bebecareNoAuthAPI := g.Group("/api/bebecare/noauth")
+	bebecareNoAuthAPI := g.Group("/api/bebecare/noauth/")
 	{
 		bebecareNoAuthAPI.POST("/login", bebecare.CheckUser)
 	}
