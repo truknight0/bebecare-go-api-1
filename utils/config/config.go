@@ -12,12 +12,7 @@ var serviceMode string
 
 func init() {
 	//환경 변수
-	serviceHome := os.Getenv("bebecare go api 1")
-	if serviceHome == "" {
-		fmt.Print("[Warning!!] ServiceHome is not set. ")
-		fmt.Println("Current directory is set as a service home")
-		serviceHome = ""
-	}
+	serviceHome := os.Getenv("homePath")
 	f, err := ini.Load(serviceHome + "release/config/bebecare-go-api-1.ini")
 	if err != nil {
 		panic(err)

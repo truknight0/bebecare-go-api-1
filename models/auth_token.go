@@ -1,4 +1,4 @@
-package model
+package models
 
 import (
 	"bebecare-go-api-1/db"

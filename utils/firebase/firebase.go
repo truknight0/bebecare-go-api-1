@@ -14,10 +14,7 @@ var app *firebsego.App
 var ctx context.Context
 
 func init() {
-	serviceHome := os.Getenv("BEBECARE_GO_API_1_HOME")
-	if serviceHome == "" {
-		serviceHome = ".."
-	}
+	serviceHome := os.Getenv("homePath")
 	serviceKeyFile := fmt.Sprintf("%s/config/google-service-account.json", serviceHome)
 
 	ctx = context.Background()

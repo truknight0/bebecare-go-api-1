@@ -15,10 +15,7 @@ import (
 var logLevel constants.LOG_LEVEL
 
 func init() {
-	serviceHome := os.Getenv("bebecare go api 1")
-	if serviceHome == "" {
-		serviceHome = ".."
-	}
+	serviceHome := os.Getenv("homePath")
 	logPath := fmt.Sprintf("%s/logs/%s", serviceHome, "bebecare-go-api-1_%Y%m%d.log")
 	rl, _ := rotatelogs.New(
 		logPath,

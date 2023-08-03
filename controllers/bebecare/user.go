@@ -6,7 +6,7 @@ import (
 	"bebecare-go-api-1/beans/db_object"
 	"bebecare-go-api-1/beans/user"
 	"bebecare-go-api-1/db"
-	"bebecare-go-api-1/model/user"
+	"bebecare-go-api-1/models/user"
 	"bebecare-go-api-1/utils"
 	"bebecare-go-api-1/utils/http_util"
 	"github.com/gin-gonic/gin"
