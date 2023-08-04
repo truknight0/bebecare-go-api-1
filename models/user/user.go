@@ -56,7 +56,7 @@ func GetUserInfoWithToken(token string) (*db_object.UserInfoWithToken, error) {
 func GetUserTokenWithToken(token string) (string, error) {
 	var getToken string
 	query := `
-		SELECT token 
+		SELECT token
 		FROM auth_token
 		WHERE token = ?
 			AND DATE_FORMAT(expire_date, '%Y-%m-%d %H:%i:%s') >= NOW()`

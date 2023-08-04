@@ -16,7 +16,12 @@ var logLevel constants.LOG_LEVEL
 
 func init() {
 	serviceHome := os.Getenv("homePath")
-	logPath := fmt.Sprintf("%s/logs/%s", serviceHome, "bebecare-go-api-1_%Y%m%d.log")
+	var logPath string
+	if serviceHome == "" {
+		logPath = fmt.Sprintf("%slogs/%s", serviceHome, "bebecare-go-api-1_%Y%m%d.log")
+	} else {
+		logPath = fmt.Sprintf("%s/logs/%s", serviceHome, "bebecare-go-api-1_%Y%m%d.log")
+	}
 	rl, _ := rotatelogs.New(
 		logPath,
 		rotatelogs.WithMaxAge(time.Hour*24*30),
