@@ -12,13 +12,26 @@ func main() {
 	g := gin.New()
 	g.Use(gin.Logger())
 
+	//mux := http.NewServeMux()
+	//mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	//	w.Header().Set("Access-Control-Allow-Origin", "*")
+	//})
+	//
+	//// cors.Default() setup the middleware with default options being
+	//// all origins accepted with simple methods (GET, POST). See
+	//// documentation below for more options.
+	//handler := cors.Default().Handler(mux)
+	//http.ListenAndServe(":8080", handler)
+
 	// ROUTE Setting
 	bebecareNoAuthAPI := g.Group("/api/bebecare/noauth/")
+	bebecareNoAuthAPI.Use(middleware.AccessPass())
 	{
 		bebecareNoAuthAPI.POST("/login", bebecare.CheckUser)
 	}
 
 	bebecareMainAPI := g.Group("/api/bebecare/service")
+	bebecareMainAPI.Use(middleware.AccessPass())
 	bebecareMainAPI.Use(middleware.CreateTokenAuthorizer())
 	{
 		bebecareMainAPI.POST("/get_user", bebecare.GetUser)
