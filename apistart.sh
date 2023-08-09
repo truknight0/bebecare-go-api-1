@@ -18,13 +18,13 @@ then
    kill -9 $PROCESS
    echo "$DATE : $SERVICE_NAME(PID : $PROCESS) Shutdown Complete!"
    echo "$DATE : $SERVICE_NAME Service Restart!"
-   exec `go build -o bebecare-go-api-1 server.go`
+   exec `go build -o $SERVICE_NAME server.go`
    echo "$DATE : $SERVICE_NAME Startup!"
-   exec `./bebecare-go-api-1`
+   exec `./$SERVICE_NAME`
 else
-   exec `go build -o bebecare-go-api-1 server.go`
+   exec `go build -o $SERVICE_NAME server.go`
    echo "$DATE : $SERVICE_NAME Startup!"
-   exec `./bebecare-go-api-1`
+   exec `./$SERVICE_NAME`
 fi
 
 echo "###################################################"
