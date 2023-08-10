@@ -3,13 +3,14 @@ package middleware
 import (
 	"bebecare-go-api-1/beans"
 	"bebecare-go-api-1/beans/constants"
+	"bebecare-go-api-1/beans/global"
 	"bebecare-go-api-1/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
 )
 
-const TOKEN_TYPE = "Bearer"
+const TokenType = "Bearer"
 
 func CreateTokenAuthorizer() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -23,7 +24,7 @@ func CreateTokenAuthorizer() gin.HandlerFunc {
 		}
 
 		authKeys := strings.Split(authHeader, " ")
-		if strings.Compare(authKeys[0], TOKEN_TYPE) != 0 {
+		if strings.Compare(authKeys[0], TokenType) != 0 {
 			response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN
 			response.Message = constants.GetResponseMsg(constants.ERR_LOGIN_UNAUTHORIZED_TOKEN)
 			c.AbortWithStatusJSON(http.StatusOK, response)
@@ -37,6 +38,7 @@ func CreateTokenAuthorizer() gin.HandlerFunc {
 		}
 
 		authToken := authKeys[1]
+		global.UserToken = authToken
 		_, err := models.SelectValidToken(authToken)
 		if err != nil {
 			response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN

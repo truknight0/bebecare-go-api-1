@@ -7,5 +7,8 @@ type InsertChildren struct {
 	Name     string      `db:"name"`
 	Birthday string      `db:"birthday"`
 	Gender   string      `db:"gender"`
+	Tall     string      `db:"tall"`
+	Weight   string      `db:"weight"`
+	HeadSize string      `db:"head_size"`
 	ImageUrl interface{} `db:"image_url"`
 }

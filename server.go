@@ -36,6 +36,8 @@ func main() {
 	{
 		bebecareMainAPI.POST("/get_user", bebecare.GetUser)
 		bebecareMainAPI.POST("/children/insert", bebecare.InsertChildren)
+		bebecareMainAPI.POST("/invite/make", bebecare.MakeInviteCode)
+		bebecareMainAPI.POST("/invite/join", bebecare.JoinInviteCode)
 	}
 
 	port := config.GetStringDefault("server.port", "8080")

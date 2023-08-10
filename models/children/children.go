@@ -12,7 +12,11 @@ func InsertChildren(insertRequest *db_object.InsertChildren) (int, error) {
 		SET 
 			name = :name,
 			birthday = :birthday,
-			gender = :gender`
+			gender = :gender,
+			tall = :tall,
+			weight = :weight,
+			head_size = :head_size,
+			image_url = :image_url`
 
 	res, err := insertRequest.Trx.NamedExec(query, insertRequest)
 

@@ -6,8 +6,8 @@ import (
 	"bebecare-go-api-1/beans/constants"
 	"bebecare-go-api-1/beans/db_object"
 	"bebecare-go-api-1/db"
-	childrenModel "bebecare-go-api-1/models/children"
-	userModel "bebecare-go-api-1/models/user"
+	"bebecare-go-api-1/models/children"
+	"bebecare-go-api-1/models/user"
 	"bebecare-go-api-1/utils/http_util"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -36,6 +36,9 @@ func InsertChildren(c *gin.Context) {
 	insertData.Name = request.Name
 	insertData.Birthday = request.Birthday
 	insertData.Gender = request.Gender
+	insertData.Tall = request.Tall
+	insertData.Weight = request.Weight
+	insertData.HeadSize = request.HeadSize
 	insertData.ImageUrl = request.ImageUrl
 	childrenIdx, err := childrenModel.InsertChildren(insertData)
 	if err != nil {

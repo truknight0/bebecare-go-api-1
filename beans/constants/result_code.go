@@ -18,6 +18,9 @@ const ERR_DB_LOCK = 1100
 const ERR_LOGIN_NOTHING_TOKEN = 2000
 const ERR_LOGIN_UNAUTHORIZED_TOKEN = 2001
 
+// 초대
+const ERR_INVITE_CODE = 3000
+
 func GetResponseMsg(code int) string {
 	//status := ""
 	message := ""
@@ -35,15 +38,17 @@ func GetResponseMsg(code int) string {
 	case ERR_DB_NODATA:
 		message = "데이터가 존재하지 않습니다."
 	case ERR_DB_DUPLICATION_DATA:
-		message = ""
+		message = "ERR_DB_DUPLICATION_DATA"
 	case ERR_DB_UPDATE_DATA:
-		message = ""
+		message = "ERR_DB_UPDATE_DATA"
 	case ERR_DB_DELETE_DATA:
-		message = ""
+		message = "ERR_DB_DELETE_DATA"
 	case ERR_DB_INSERT_DATA:
-		message = ""
+		message = "ERR_DB_INSERT_DATA"
 	case ERR_DB_EXIST_DATA:
-		message = ""
+		message = "ERR_DB_EXIST_DATA"
+	case ERR_INVITE_CODE:
+		message = "올바르지 않은 초대코드 입니다."
 	default:
 		message = "api system error"
 	}

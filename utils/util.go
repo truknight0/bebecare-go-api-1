@@ -1,6 +1,7 @@
 package utils
 
 import (
+	inviteModel "bebecare-go-api-1/models/invite"
 	"encoding/base64"
 	"fmt"
 	"github.com/google/uuid"
@@ -60,4 +61,23 @@ func IsDev() bool {
 	}
 
 	return true
+}
+
+func MakeInviteCodeUnique() int {
+	var rangeMin = 100000
+	var rangeMax = 999999
+	var inviteCode = rangeMin + rand.Intn(rangeMax-rangeMin)
+
+	// true = 중복, false = 중복안됨
+	checkDupCode, err := inviteModel.DupInviteCode(inviteCode)
+	if err != nil {
+		return 0
+	}
+
+	// 중복이면 재귀
+	if checkDupCode == true {
+		MakeInviteCodeUnique()
+	}
+
+	return inviteCode
 }

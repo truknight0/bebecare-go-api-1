@@ -4,6 +4,9 @@ type InsertChildrenRequest struct {
 	Name     string      `json:"name"`
 	Birthday string      `json:"birthday"`
 	Gender   string      `json:"gender"`
+	Tall     string      `json:"tall"`
+	Weight   string      `json:"weight"`
+	HeadSize string      `json:"head_size"`
 	ImageUrl interface{} `json:"image_url"`
 }
 
