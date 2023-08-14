@@ -6,7 +6,8 @@ import (
 	"bebecare-go-api-1/beans/db_object"
 	"bebecare-go-api-1/beans/global"
 	"bebecare-go-api-1/beans/invite"
-	"bebecare-go-api-1/models/children"
+	"bebecare-go-api-1/db"
+	childrenModel "bebecare-go-api-1/models/children"
 	"bebecare-go-api-1/models/invite"
 	"bebecare-go-api-1/models/user"
 	"bebecare-go-api-1/utils"
@@ -19,7 +20,6 @@ import (
 func MakeInviteCode(c *gin.Context) {
 	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
 
-	// request 검증
 	request := new(invite.MakeInviteCodeRequest)
 	err := c.BindJSON(&request)
 	if err != nil || !request.IsValidParameter() {
@@ -96,10 +96,14 @@ func JoinInviteCode(c *gin.Context) {
 		return
 	}
 
+	trx, _ := db.DB.Beginx()
+	defer trx.Rollback()
+
 	// 초대데이터 등록
 	var token = global.UserToken
 	userInfo, err := userModel.GetUserInfoWithToken(token) // 초대받은 유저 정보 가져오기
 	insertData := new(db_object.RelInviteCodeAndUser)
+	insertData.Trx = trx
 	insertData.InviteCode = inviteInfo.InviteCode
 	insertData.UserIdx = userInfo.Idx
 	insertData.UserName = userInfo.Name
@@ -112,8 +116,10 @@ func JoinInviteCode(c *gin.Context) {
 		return
 	}
 
+	// 초대코드를 생성한 유저와 연결된 아이 정보 가져오기
+	childrenList, _ := childrenModel.GetUserChildrenList(inviteInfo.UserIdx)
 	// 아기와 초대받은 유저 연결
-	err = childrenModel.InsertRelParentChildren(userInfo.Idx, inviteInfo.ChildrenIdx)
+	err = inviteModel.RelInviteUserAndChildren(userInfo.Idx, childrenList)
 	if err != nil {
 		response.Code = constants.ERR_DB_INSERT_DATA
 		response.Message = constants.GetResponseMsg(constants.ERR_DB_INSERT_DATA)
@@ -121,5 +127,15 @@ func JoinInviteCode(c *gin.Context) {
 		return
 	}
 
+	// 초대받은 유저 타입 변경
+	err = userModel.SetVisitor(userInfo.Idx)
+	if err != nil {
+		response.Code = constants.ERR_DB_UPDATE_DATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_UPDATE_DATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	trx.Commit()
 	http_util.JsonResponse(c, http.StatusOK, response)
 }

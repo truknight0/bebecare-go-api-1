@@ -4,6 +4,7 @@ import "github.com/jmoiron/sqlx"
 
 type InsertChildren struct {
 	Trx      *sqlx.Tx
+	UserIdx  int         `db:"user_idx"`
 	Name     string      `db:"name"`
 	Birthday string      `db:"birthday"`
 	Gender   string      `db:"gender"`

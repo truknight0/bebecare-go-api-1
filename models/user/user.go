@@ -39,6 +39,7 @@ func GetUserInfoWithToken(token string) (*db_object.UserInfoWithToken, error) {
 		       us.phone,
 		       us.role,
 		       us.is_push_agree,
+		       us.user_type,
 		       DATE_FORMAT(us.created_at, '%Y-%m-%d') AS created_at,
 		       at.token
 		FROM auth_token AS at
@@ -99,11 +100,13 @@ func InsertUser(insertUser *db_object.InsertUser) (int, error) {
 		SET 
 			name = :name,
 			phone = :phone,
-			role = :role
+			role = :role,
+			is_push_agree = :is_push_agree
 		ON DUPLICATE KEY UPDATE
 			name = :name,
 			phone = :phone,
-			role = :role`
+			role = :role,
+			is_push_agree = :is_push_agree`
 
 	r, err := db.DB.NamedExec(query, insertUser)
 
@@ -122,6 +125,38 @@ func InsertToken(userIdx int, token string) error {
 		    token = ?,
 			user_idx = ?`
 	_, err := db.DB.Exec(query, token, userIdx)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func SetMaster(userIdx int) error {
+	query := `
+		UPDATE user SET 
+			user_type = 'M'
+		WHERE idx = ?`
+
+	_, err := db.DB.Exec(query, userIdx)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func SetVisitor(userIdx int) error {
+	query := `
+		UPDATE user SET 
+			user_type = 'V'
+		WHERE idx = ?`
+
+	_, err := db.DB.Exec(query, userIdx)
 
 	if err != nil {
 		fmt.Println(err.Error())

@@ -4,6 +4,7 @@ import (
 	"bebecare-go-api-1/beans/db_object"
 	"bebecare-go-api-1/db"
 	"bebecare-go-api-1/utils/log"
+	"fmt"
 )
 
 func DupInviteCode(inviteCode int) (bool, error) {
@@ -53,7 +54,28 @@ func RelInviteCodeAndUser(insertRequest *db_object.RelInviteCodeAndUser) error {
 			user_name = :user_name,
 			user_role = :user_role`
 
-	_, err := db.DB.NamedExec(query, insertRequest)
+	_, err := insertRequest.Trx.NamedExec(query, insertRequest)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return err
+	}
+	return nil
+}
+
+func RelInviteUserAndChildren(userIdx int, childrenList []db_object.GetUserChildrenInfo) error {
+	query := `
+		INSERT INTO rel_parent_children(user_idx, children_idx) VALUES `
+
+	var vals string
+	for _, row := range childrenList {
+		var multiInsertStr = "(%d, %d),"
+		vals += fmt.Sprintf(multiInsertStr, userIdx, row.Idx)
+	}
+	query += vals
+	query = query[0 : len(query)-1]
+
+	_, err := db.DB.Exec(query)
 
 	if err != nil {
 		log.ERROR(err.Error())
@@ -67,11 +89,10 @@ func GetInviteCodeInfo(inviteCode int) (*db_object.GetInviteCodeInfo, error) {
 
 	query := `
 		SELECT ic.invite_code,
-		       us.name,
-		       rpc.children_idx
+		       ic.user_idx,
+		       us.name
 		FROM invite_code AS ic
 		LEFT JOIN user AS us ON ic.user_idx = us.idx
-		LEFT JOIN rel_parent_children AS rpc ON rpc.user_idx = us.idx
 		WHERE ic.invite_code = ?`
 
 	err := db.DB.Get(inviteCodeInfo, query, inviteCode)
@@ -88,11 +109,10 @@ func GetInviteCodeInfoWithUserIdx(userIdx int) (*db_object.GetInviteCodeInfo, er
 
 	query := `
 		SELECT ic.invite_code,
-		       us.name,
-		       rpc.children_idx
+		       ic.user_idx,
+		       us.name
 		FROM invite_code AS ic
 		LEFT JOIN user AS us ON ic.user_idx = us.idx
-		LEFT JOIN rel_parent_children AS rpc ON rpc.user_idx = us.idx
 		WHERE us.idx = ?`
 
 	err := db.DB.Get(inviteCodeInfo, query, userIdx)

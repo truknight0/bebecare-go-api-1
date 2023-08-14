@@ -33,7 +33,7 @@ func GetUserInfo(c *gin.Context) {
 		return
 	}
 	// 아이정보 가져오기
-	childrenInfo, _ := childrenModel.GetUserChildren(userInfo.Idx)
+	childrenInfo, _ := childrenModel.GetUserChildrenList(userInfo.Idx)
 	// 초대코드 가져오기
 	inviteCodeInfo, _ := inviteModel.GetInviteCodeInfoWithUserIdx(userInfo.Idx)
 
@@ -46,6 +46,7 @@ func GetUserInfo(c *gin.Context) {
 		Phone:       userInfo.Phone,
 		Role:        userInfo.Role,
 		IsPushAgree: userInfo.IsPushAgree,
+		UserType:    userInfo.UserType,
 		CreatedAt:   userInfo.CreatedAt,
 		InviteCode:  inviteCodeInfo.InviteCode,
 		Children:    childrenInfo}
@@ -87,7 +88,7 @@ func LoginUser(c *gin.Context) {
 				return
 			}
 			// 아이정보 가져오기
-			childrenInfo, _ := childrenModel.GetUserChildren(userInfo.Idx)
+			childrenInfo, _ := childrenModel.GetUserChildrenList(userInfo.Idx)
 
 			isFirstUser = false
 			userData := user.SetUserData{
@@ -107,6 +108,7 @@ func LoginUser(c *gin.Context) {
 		insertData.Name = request.Name
 		insertData.Phone = request.Phone
 		insertData.Role = request.Role
+		insertData.IsPushAgree = request.IsPushAgree
 		// 회원정보 저장
 		var userIdx int // 마지막에 입력된 회원 일련번호
 		userIdx, err = userModel.InsertUser(insertData)
@@ -150,7 +152,7 @@ func LoginUser(c *gin.Context) {
 			return
 		}
 		// 아이정보 가져오기
-		childrenInfo, _ := childrenModel.GetUserChildren(userInfo.Idx)
+		childrenInfo, _ := childrenModel.GetUserChildrenList(userInfo.Idx)
 
 		isFirstUser = false
 		userData := user.SetUserData{

@@ -15,14 +15,16 @@ type UserInfoWithToken struct {
 	Name        string `db:"name" json:"name"`
 	Phone       string `db:"phone" json:"phone"`
 	Role        string `db:"role" json:"role"`
-	IsPushAgree int    `db:"is_push_agree"`
+	IsPushAgree int    `db:"is_push_agree" json:"is_push_agree"`
+	UserType    string `db:"user_type" json:"user_type"`
 	Token       string `db:"token" json:"token"`
 	CreatedAt   string `db:"created_at" json:"created_at"`
 }
 
 type InsertUser struct {
-	Trx   *sqlx.Tx
-	Name  string `db:"name"`
-	Phone string `db:"phone"`
-	Role  string `db:"role"`
+	Trx         *sqlx.Tx
+	Name        string `db:"name"`
+	Phone       string `db:"phone"`
+	Role        string `db:"role"`
+	IsPushAgree int    `db:"is_push_agree"`
 }

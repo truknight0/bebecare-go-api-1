@@ -11,6 +11,7 @@ func InsertChildren(insertRequest *db_object.InsertChildren) (int, error) {
 	query := `
 		INSERT INTO children
 		SET 
+			user_idx = :user_idx,
 			name = :name,
 			birthday = :birthday,
 			gender = :gender,
@@ -46,7 +47,7 @@ func InsertRelParentChildren(userIdx, childrenIdx int) error {
 	return nil
 }
 
-func GetUserChildren(userIdx int) ([]db_object.GetUserChildrenInfo, error) {
+func GetUserChildrenList(userIdx int) ([]db_object.GetUserChildrenInfo, error) {
 	var childrenInfo []db_object.GetUserChildrenInfo
 
 	query := `
@@ -70,4 +71,22 @@ func GetUserChildren(userIdx int) ([]db_object.GetUserChildrenInfo, error) {
 		return nil, err
 	}
 	return childrenInfo, nil
+}
+
+func GetChildrenCount(userIdx int) (int, error) {
+	var count int
+
+	query := `
+		SELECT COUNT(*) AS COUNT
+		FROM rel_parent_children
+		WHERE user_idx = ?`
+
+	err := db.DB.Get(&count, query, userIdx)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return 0, err
+	}
+	return count, nil
+
 }
