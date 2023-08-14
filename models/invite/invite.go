@@ -82,3 +82,24 @@ func GetInviteCodeInfo(inviteCode int) (*db_object.GetInviteCodeInfo, error) {
 	}
 	return inviteCodeInfo, nil
 }
+
+func GetInviteCodeInfoWithUserIdx(userIdx int) (*db_object.GetInviteCodeInfo, error) {
+	inviteCodeInfo := new(db_object.GetInviteCodeInfo)
+
+	query := `
+		SELECT ic.invite_code,
+		       us.name,
+		       rpc.children_idx
+		FROM invite_code AS ic
+		LEFT JOIN user AS us ON ic.user_idx = us.idx
+		LEFT JOIN rel_parent_children AS rpc ON rpc.user_idx = us.idx
+		WHERE us.idx = ?`
+
+	err := db.DB.Get(inviteCodeInfo, query, userIdx)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return nil, err
+	}
+	return inviteCodeInfo, nil
+}

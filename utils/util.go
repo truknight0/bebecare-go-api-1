@@ -1,7 +1,7 @@
 package utils
 
 import (
-	inviteModel "bebecare-go-api-1/models/invite"
+	"bebecare-go-api-1/models/invite"
 	"encoding/base64"
 	"fmt"
 	"github.com/google/uuid"

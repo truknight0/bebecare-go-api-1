@@ -37,7 +37,7 @@ func GetUserInfoWithToken(token string) (*db_object.UserInfoWithToken, error) {
 		       us.name,
 		       us.phone,
 		       us.role,
-		       us.created_at,
+		       DATE_FORMAT(us.created_at, '%Y-%m-%d') AS created_at
 		       at.token
 		FROM auth_token AS at
 		LEFT JOIN user AS us ON at.user_idx = us.idx

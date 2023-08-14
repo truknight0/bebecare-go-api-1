@@ -3,6 +3,7 @@ package childrenModel
 import (
 	"bebecare-go-api-1/beans/db_object"
 	"bebecare-go-api-1/db"
+	"bebecare-go-api-1/utils/log"
 	"fmt"
 )
 
@@ -43,4 +44,30 @@ func InsertRelParentChildren(userIdx, childrenIdx int) error {
 	}
 
 	return nil
+}
+
+func GetUserChildren(userIdx int) ([]db_object.GetUserChildrenInfo, error) {
+	var childrenInfo []db_object.GetUserChildrenInfo
+
+	query := `
+		SELECT cr.idx,
+		    cr.name,
+			DATE_FORMAT(cr.birthday, '%Y-%m-%d') as birthday,
+			cr.gender,
+			cr.tall,
+			cr.weight,
+			cr.head_size,
+			cr.image_url
+		FROM rel_parent_children AS rpc
+		LEFT JOIN children AS cr ON rpc.children_idx = cr.idx
+		WHERE rpc.user_idx = ?
+		ORDER BY idx ASC`
+
+	err := db.DB.Select(&childrenInfo, query, userIdx)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return nil, err
+	}
+	return childrenInfo, nil
 }

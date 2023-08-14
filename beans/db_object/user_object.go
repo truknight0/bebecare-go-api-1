@@ -3,7 +3,7 @@ package db_object
 import "github.com/jmoiron/sqlx"
 
 type UserInfo struct {
-	Idx       string `db:"idx" json:"idx"`
+	Idx       int    `db:"idx" json:"idx"`
 	Name      string `db:"name" json:"name"`
 	Phone     string `db:"phone" json:"phone"`
 	Role      string `db:"role" json:"role"`

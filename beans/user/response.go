@@ -12,7 +12,25 @@ type CheckUserResponse struct {
 	beans.BaseResponse
 }
 
+type GetUserInfoData struct {
+	IsFirstUser bool        `json:"is_first_user"`
+	Token       string      `json:"token"`
+	Idx         int         `json:"idx"`
+	Name        string      `json:"name"`
+	Phone       string      `json:"phone"`
+	Role        string      `json:"role"`
+	CreatedAt   string      `json:"created_at"`
+	InviteCode  int         `json:"invite_code"`
+	Children    interface{} `json:"children"`
+}
+
 type SetUserToken struct {
 	IsFirstUser bool   `json:"isFirstUser"`
 	Token       string `json:"token"`
+}
+
+type SetUserData struct {
+	IsFirstUser bool        `json:"is_first_user"`
+	Token       string      `json:"token"`
+	Children    interface{} `json:"children"`
 }

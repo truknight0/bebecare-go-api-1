@@ -27,14 +27,14 @@ func main() {
 	bebecareNoAuthAPI := g.Group("/api/bebecare/noauth/")
 	bebecareNoAuthAPI.Use(middleware.AccessPass())
 	{
-		bebecareNoAuthAPI.POST("/login", bebecare.CheckUser)
+		bebecareNoAuthAPI.POST("/login", bebecare.LoginUser)
 	}
 
 	bebecareMainAPI := g.Group("/api/bebecare/service")
 	bebecareMainAPI.Use(middleware.AccessPass())
 	bebecareMainAPI.Use(middleware.CreateTokenAuthorizer())
 	{
-		bebecareMainAPI.POST("/get_user", bebecare.GetUser)
+		bebecareMainAPI.POST("/user/info", bebecare.GetUserInfo)
 		bebecareMainAPI.POST("/children/insert", bebecare.InsertChildren)
 		bebecareMainAPI.POST("/invite/make", bebecare.MakeInviteCode)
 		bebecareMainAPI.POST("/invite/join", bebecare.JoinInviteCode)
