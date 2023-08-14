@@ -45,6 +45,7 @@ func GetUserInfo(c *gin.Context) {
 		Name:        userInfo.Name,
 		Phone:       userInfo.Phone,
 		Role:        userInfo.Role,
+		IsPushAgree: userInfo.IsPushAgree,
 		CreatedAt:   userInfo.CreatedAt,
 		InviteCode:  inviteCodeInfo.InviteCode,
 		Children:    childrenInfo}
