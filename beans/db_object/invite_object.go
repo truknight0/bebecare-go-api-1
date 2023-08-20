@@ -15,3 +15,12 @@ type RelInviteCodeAndUser struct {
 	UserName   string `db:"user_name"`
 	UserRole   string `db:"user_role"`
 }
+
+type GetUserListWithInviteCode struct {
+	Idx      int    `json:"idx" db:"idx"`
+	Name     string `json:"name" db:"name"`
+	Phone    string `json:"phone" db:"phone"`
+	Role     string `json:"role" db:"role"`
+	UserType string `json:"user_type" db:"user_type"`
+	IsMine   bool   `json:"is_mine" db:"is_mine"`
+}

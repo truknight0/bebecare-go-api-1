@@ -36,6 +36,8 @@ func GetUserInfo(c *gin.Context) {
 	childrenInfo, _ := childrenModel.GetUserChildrenList(userInfo.Idx)
 	// 초대코드 가져오기
 	inviteCodeInfo, _ := inviteModel.GetInviteCodeInfoWithUserIdx(userInfo.Idx)
+	// 엮인 가족 정보 가져오기
+	parents, _ := inviteModel.GetUserListWithInviteCode(global.UserToken, inviteCodeInfo.InviteCode)
 
 	isFirstUser = false
 	userData := user.GetUserInfoData{
@@ -49,9 +51,30 @@ func GetUserInfo(c *gin.Context) {
 		UserType:    userInfo.UserType,
 		CreatedAt:   userInfo.CreatedAt,
 		InviteCode:  inviteCodeInfo.InviteCode,
-		Children:    childrenInfo}
+		Children:    childrenInfo,
+		Parents:     parents}
 
 	response.Data = userData
+
+	http_util.JsonResponse(c, http.StatusOK, response)
+}
+
+func CheckUser(c *gin.Context) {
+	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+
+	// 유저정보 가져오기
+	userInfo, err := userModel.GetUserInfoWithToken(global.UserToken)
+	if err != nil {
+		response.Code = constants.ERR_DB_NODATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_NODATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	// 아이정보 가져오기
+	childrenInfo, _ := childrenModel.GetUserChildrenList(userInfo.Idx)
+
+	isFirstUser = false
+	response.Data = childrenInfo
 
 	http_util.JsonResponse(c, http.StatusOK, response)
 }
@@ -163,5 +186,143 @@ func LoginUser(c *gin.Context) {
 		response.Data = userData
 	}
 
+	http_util.JsonResponse(c, http.StatusOK, response)
+}
+
+func ModifyUser(c *gin.Context) {
+	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+
+	request := new(user.ModifyUserRequest)
+	err := c.BindJSON(&request)
+	if err != nil || !request.IsValidParameter() {
+		response.Code = constants.ERR_MSG_INVALID_PARAMETER
+		response.Message = constants.GetResponseMsg(constants.ERR_MSG_INVALID_PARAMETER)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	modifyData := new(db_object.ModifyUser)
+	modifyData.Name = request.Name
+	modifyData.Phone = request.Phone
+	modifyData.Role = request.Role
+	modifyData.IsPushAgree = request.IsPushAgree
+	// 회원정보 수정
+	err = userModel.ModifyUser(modifyData)
+	if err != nil {
+		response.Code = constants.ERR_DB_UPDATE_DATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_UPDATE_DATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	http_util.JsonResponse(c, http.StatusOK, response)
+}
+
+func DisconnectUser(c *gin.Context) {
+	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+
+	request := new(user.DisconnectUserRequest)
+	err := c.BindJSON(&request)
+	if err != nil || !request.IsValidParameter() {
+		response.Code = constants.ERR_MSG_INVALID_PARAMETER
+		response.Message = constants.GetResponseMsg(constants.ERR_MSG_INVALID_PARAMETER)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	trx, _ := db.DB.Beginx()
+	defer trx.Rollback()
+
+	// 연결끊기 권한이 있는 유저인지 확인
+	userInfo, err := userModel.GetUserInfoWithToken(global.UserToken)
+	if err != nil {
+		response.Code = constants.ERR_DB_NODATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_NODATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	if userInfo.UserType != constants.USER_TYPE_MASTER {
+		response.Code = constants.ERR_PROCESS_USER_LEVEL
+		response.Message = constants.GetResponseMsg(constants.ERR_PROCESS_USER_LEVEL)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	queryData := new(db_object.DisconnectUser)
+	queryData.Trx = trx
+	queryData.Idx = request.Idx
+	err = userModel.DisconnectChildren(queryData)
+	if err != nil {
+		trx.Rollback()
+		response.Code = constants.ERR_DB_DELETE_DATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_DELETE_DATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	err = userModel.DisconnectInviteCode(queryData)
+	if err != nil {
+		trx.Rollback()
+		response.Code = constants.ERR_DB_DELETE_DATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_DELETE_DATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	trx.Commit()
+	http_util.JsonResponse(c, http.StatusOK, response)
+}
+
+func DeleteUser(c *gin.Context) {
+	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+
+	trx, _ := db.DB.Beginx()
+	defer trx.Rollback()
+
+	// 연결끊기 권한이 있는 유저인지 확인
+	userInfo, err := userModel.GetUserInfoWithToken(global.UserToken)
+	if err != nil {
+		response.Code = constants.ERR_DB_NODATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_NODATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	queryData := new(db_object.DisconnectUser)
+	queryData.Trx = trx
+	queryData.Idx = userInfo.Idx
+	err = userModel.DisconnectChildren(queryData)
+	if err != nil {
+		trx.Rollback()
+		response.Code = constants.ERR_DB_DELETE_DATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_DELETE_DATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	err = userModel.DisconnectInviteCode(queryData)
+	if err != nil {
+		trx.Rollback()
+		response.Code = constants.ERR_DB_DELETE_DATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_DELETE_DATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	err = userModel.DeleteAuthToken(queryData)
+	if err != nil {
+		trx.Rollback()
+		response.Code = constants.ERR_DB_DELETE_DATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_DELETE_DATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	err = userModel.DeleteUser(queryData)
+	if err != nil {
+		trx.Rollback()
+		response.Code = constants.ERR_DB_DELETE_DATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_DELETE_DATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	trx.Commit()
 	http_util.JsonResponse(c, http.StatusOK, response)
 }

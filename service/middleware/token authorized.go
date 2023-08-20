@@ -38,7 +38,6 @@ func CreateTokenAuthorizer() gin.HandlerFunc {
 		}
 
 		authToken := authKeys[1]
-		global.UserToken = authToken
 		_, err := models.SelectValidToken(authToken)
 		if err != nil {
 			response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN
@@ -46,6 +45,9 @@ func CreateTokenAuthorizer() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusOK, response)
 			return
 		}
+
+		// 검증이 완료되면 글로벌 변수값 할당
+		global.UserToken = authToken
 
 		c.Next()
 	}

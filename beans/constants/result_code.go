@@ -5,6 +5,8 @@ const ERR_FAIL = 400
 
 const ERR_MSG_INVALID_PARAMETER = 9000
 
+const ERR_PROCESS_USER_LEVEL = 9900
+
 // 데이터베이스 관련 실패 코드
 const ERR_DB_NODATA = 1000
 const ERR_DB_DUPLICATION_DATA = 1001
@@ -31,6 +33,8 @@ func GetResponseMsg(code int) string {
 		message = "api system error"
 	case ERR_MSG_INVALID_PARAMETER:
 		message = "필수 입력항목이 누락되었습니다."
+	case ERR_PROCESS_USER_LEVEL:
+		message = "실행 권한이 없습니다."
 	case ERR_LOGIN_NOTHING_TOKEN:
 		message = "인증값이 존재하지 않습니다."
 	case ERR_LOGIN_UNAUTHORIZED_TOKEN:

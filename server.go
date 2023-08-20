@@ -34,7 +34,11 @@ func main() {
 	bebecareMainAPI.Use(middleware.AccessPass())
 	bebecareMainAPI.Use(middleware.CreateTokenAuthorizer())
 	{
+		bebecareMainAPI.POST("/user/check", bebecare.CheckUser)
 		bebecareMainAPI.POST("/user/info", bebecare.GetUserInfo)
+		bebecareMainAPI.POST("/user/modify", bebecare.ModifyUser)
+		bebecareMainAPI.POST("/user/delete", bebecare.DeleteUser)
+		bebecareMainAPI.POST("/parents/disconnect", bebecare.DisconnectUser)
 		bebecareMainAPI.POST("/children/insert", bebecare.InsertChildren)
 		bebecareMainAPI.POST("/invite/make", bebecare.MakeInviteCode)
 		bebecareMainAPI.POST("/invite/join", bebecare.JoinInviteCode)

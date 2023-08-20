@@ -123,3 +123,27 @@ func GetInviteCodeInfoWithUserIdx(userIdx int) (*db_object.GetInviteCodeInfo, er
 	}
 	return inviteCodeInfo, nil
 }
+
+func GetUserListWithInviteCode(token string, inviteCode int) ([]db_object.GetUserListWithInviteCode, error) {
+	var userList []db_object.GetUserListWithInviteCode
+
+	query := `
+		SELECT us.idx,
+			us.name,
+			us.phone,
+			us.role,
+			us.user_type,
+			IF (at.token = ?, true, false) AS is_mine
+		FROM rel_invite_code_user AS ric
+		LEFT JOIN user AS us ON ric.user_idx = us.idx
+		LEFT JOIN auth_token AS at ON at.user_idx = us.idx
+		WHERE ric.invite_code = ?`
+
+	err := db.DB.Select(&userList, query, token, inviteCode)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return nil, err
+	}
+	return userList, nil
+}

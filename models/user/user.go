@@ -108,7 +108,7 @@ func InsertUser(insertUser *db_object.InsertUser) (int, error) {
 			role = :role,
 			is_push_agree = :is_push_agree`
 
-	r, err := db.DB.NamedExec(query, insertUser)
+	r, err := insertUser.Trx.NamedExec(query, insertUser)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -125,6 +125,24 @@ func InsertToken(userIdx int, token string) error {
 		    token = ?,
 			user_idx = ?`
 	_, err := db.DB.Exec(query, token, userIdx)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func ModifyUser(modifyUser *db_object.ModifyUser) error {
+	query := `
+		UPDATE user SET
+		    name = :name,
+		    phone = :phone,
+		    role = :role
+		WHERE idx = :idx`
+
+	_, err := db.DB.NamedExec(query, modifyUser)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -157,6 +175,66 @@ func SetVisitor(userIdx int) error {
 		WHERE idx = ?`
 
 	_, err := db.DB.Exec(query, userIdx)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func DisconnectChildren(queryData *db_object.DisconnectUser) error {
+	query := `
+		DELETE FROM rel_parent_children
+		WHERE user_idx = :idx`
+
+	_, err := queryData.Trx.NamedExec(query, queryData)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func DisconnectInviteCode(queryData *db_object.DisconnectUser) error {
+	query := `
+		DELETE FROM rel_invite_code_user
+		WHERE user_idx = :idx`
+
+	_, err := queryData.Trx.NamedExec(query, queryData)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func DeleteAuthToken(queryData *db_object.DisconnectUser) error {
+	query := `
+		DELETE FROM auth_token
+		WHERE user_idx = :idx`
+
+	_, err := queryData.Trx.NamedExec(query, queryData)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func DeleteUser(queryData *db_object.DisconnectUser) error {
+	query := `
+		DELETE FROM user
+		WHERE idx = :idx`
+
+	_, err := queryData.Trx.NamedExec(query, queryData)
 
 	if err != nil {
 		fmt.Println(err.Error())

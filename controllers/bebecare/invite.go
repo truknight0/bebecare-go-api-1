@@ -110,6 +110,7 @@ func JoinInviteCode(c *gin.Context) {
 	insertData.UserRole = userInfo.Role
 	err = inviteModel.RelInviteCodeAndUser(insertData) // 초대코드와 유저 연결
 	if err != nil {
+		trx.Rollback()
 		response.Code = constants.ERR_DB_INSERT_DATA
 		response.Message = constants.GetResponseMsg(constants.ERR_DB_INSERT_DATA)
 		http_util.JsonResponse(c, http.StatusOK, response)
@@ -121,6 +122,7 @@ func JoinInviteCode(c *gin.Context) {
 	// 아기와 초대받은 유저 연결
 	err = inviteModel.RelInviteUserAndChildren(userInfo.Idx, childrenList)
 	if err != nil {
+		trx.Rollback()
 		response.Code = constants.ERR_DB_INSERT_DATA
 		response.Message = constants.GetResponseMsg(constants.ERR_DB_INSERT_DATA)
 		http_util.JsonResponse(c, http.StatusOK, response)
@@ -130,6 +132,7 @@ func JoinInviteCode(c *gin.Context) {
 	// 초대받은 유저 타입 변경
 	err = userModel.SetVisitor(userInfo.Idx)
 	if err != nil {
+		trx.Rollback()
 		response.Code = constants.ERR_DB_UPDATE_DATA
 		response.Message = constants.GetResponseMsg(constants.ERR_DB_UPDATE_DATA)
 		http_util.JsonResponse(c, http.StatusOK, response)

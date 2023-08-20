@@ -24,6 +24,7 @@ type GetUserInfoData struct {
 	CreatedAt   string      `json:"created_at"`
 	InviteCode  int         `json:"invite_code"`
 	Children    interface{} `json:"children"`
+	Parents     interface{} `json:"parents"`
 }
 
 type SetUserToken struct {

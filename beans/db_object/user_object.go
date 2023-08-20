@@ -10,6 +10,7 @@ type UserInfo struct {
 	IsPushAgree int    `db:"is_push_agree"`
 	CreatedAt   string `db:"created_at" json:"created_at"`
 }
+
 type UserInfoWithToken struct {
 	Idx         int    `db:"idx" json:"idx"`
 	Name        string `db:"name" json:"name"`
@@ -27,4 +28,18 @@ type InsertUser struct {
 	Phone       string `db:"phone"`
 	Role        string `db:"role"`
 	IsPushAgree int    `db:"is_push_agree"`
+}
+
+type ModifyUser struct {
+	Trx         *sqlx.Tx
+	Idx         int    `db:"idx"`
+	Name        string `db:"name"`
+	Phone       string `db:"phone"`
+	Role        string `db:"role"`
+	IsPushAgree int    `db:"is_push_agree"`
+}
+
+type DisconnectUser struct {
+	Trx *sqlx.Tx
+	Idx int `db:"idx"`
 }
