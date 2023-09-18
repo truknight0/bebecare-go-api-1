@@ -278,7 +278,6 @@ func DeleteUser(c *gin.Context) {
 	trx, _ := db.DB.Beginx()
 	defer trx.Rollback()
 
-	// 연결끊기 권한이 있는 유저인지 확인
 	userInfo, err := userModel.GetUserInfoWithToken(global.UserToken)
 	if err != nil {
 		response.Code = constants.ERR_DB_NODATA

@@ -16,7 +16,7 @@ type InsertItemRequest struct {
 }
 
 func (request *InsertItemRequest) IsValidParameter() bool {
-	if request.UserIdx <= 0 || request.ChildrenIdx <= 0 || request.StartTime == "" {
+	if request.UserIdx <= 0 || request.ChildrenIdx <= 0 || request.Type == "" || request.StartTime == "" {
 		return false
 	}
 	return true
