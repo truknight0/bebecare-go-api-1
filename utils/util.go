@@ -56,7 +56,7 @@ func GenerateUUID() string {
 
 func IsDev() bool {
 	hostname, _ := os.Hostname()
-	if strings.Contains(hostname, "itcha-real") {
+	if strings.Contains(hostname, "bebecare-real") {
 		return false
 	}
 

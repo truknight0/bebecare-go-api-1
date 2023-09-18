@@ -1,4 +1,4 @@
-package beans
+package protocols
 
 //go:generate easytags $GOFILE db:snake,json:snake
 

@@ -1,4 +1,4 @@
-package beans
+package protocols
 
 type BaseResponse struct {
 	Code    int    `json:"code"`

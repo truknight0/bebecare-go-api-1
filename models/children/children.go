@@ -30,6 +30,31 @@ func InsertChildren(insertRequest *db_object.InsertChildren) (int, error) {
 	return int(insertId), nil
 }
 
+func ModifyChildren(updateRequest *db_object.ModifyChildren) error {
+	query := `
+		UPDATE children
+		SET 
+			user_idx = :user_idx,
+			name = :name,
+			birthday = :birthday,
+			gender = :gender,
+			tall = :tall,
+			weight = :weight,
+			head_size = :head_size,
+			image_url = :image_url
+		WHERE
+		    idx = :idx`
+
+	_, err := db.DB.NamedExec(query, updateRequest)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
 func InsertRelParentChildren(userIdx, childrenIdx int) error {
 	query := `
 		INSERT INTO rel_parent_children
@@ -45,6 +70,30 @@ func InsertRelParentChildren(userIdx, childrenIdx int) error {
 	}
 
 	return nil
+}
+
+func GetChildrenInfo(idx int) (*db_object.GetUserChildrenInfo, error) {
+	childrenInfo := new(db_object.GetUserChildrenInfo)
+
+	query := `
+		SELECT idx,
+			name,
+			DATE_FORMAT(birthday, '%Y-%m-%d') as birthday,
+			gender,
+			tall,
+			weight,
+			head_size,
+			image_url
+		FROM children
+		WHERE idx = ?`
+
+	err := db.DB.Get(childrenInfo, query, idx)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return nil, err
+	}
+	return childrenInfo, nil
 }
 
 func GetUserChildrenList(userIdx int) ([]db_object.GetUserChildrenInfo, error) {
@@ -77,7 +126,7 @@ func GetChildrenCount(userIdx int) (int, error) {
 	var count int
 
 	query := `
-		SELECT COUNT(*) AS COUNT
+		SELECT COUNT(*) AS count
 		FROM rel_parent_children
 		WHERE user_idx = ?`
 
@@ -88,5 +137,32 @@ func GetChildrenCount(userIdx int) (int, error) {
 		return 0, err
 	}
 	return count, nil
+}
 
+func DeleteChildren(deleteRequest *db_object.DeleteChildren) error {
+	query := `
+		DELETE FROM children
+		WHERE idx = :idx`
+
+	_, err := deleteRequest.Trx.NamedExec(query, deleteRequest)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	return nil
+}
+
+func DeleteRelParentChildren(deleteRequest *db_object.DeleteChildren) error {
+	query := `
+		DELETE FROM rel_parent_children
+		WHERE children_idx = :idx`
+
+	_, err := deleteRequest.Trx.NamedExec(query, deleteRequest)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	return nil
 }

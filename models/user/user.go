@@ -10,7 +10,7 @@ import (
 func GetUserInfo(name, phone, role string) (*db_object.UserInfo, error) {
 	userInfo := new(db_object.UserInfo)
 
-	err := db.DB.Get(userInfo, `
+	query := `
 		SELECT	idx,
 			name,
 		    phone,
@@ -22,7 +22,10 @@ func GetUserInfo(name, phone, role string) (*db_object.UserInfo, error) {
 		WHERE
 			name = ?
 			AND phone = ?
-			AND role = ?`, name, phone, role)
+			AND role = ?`
+
+	err := db.DB.Get(userInfo, query, name, phone, role)
+
 	if err != nil {
 		log.ERROR(err.Error())
 		return nil, err
@@ -58,6 +61,7 @@ func GetUserInfoWithToken(token string) (*db_object.UserInfoWithToken, error) {
 
 func GetUserTokenWithToken(token string) (string, error) {
 	var getToken string
+
 	query := `
 		SELECT token
 		FROM auth_token
@@ -75,6 +79,7 @@ func GetUserTokenWithToken(token string) (string, error) {
 
 func GetUserToken(name, phone, role string) (string, error) {
 	var getToken string
+
 	query := `
 		SELECT at.token 
 		FROM auth_token AS at
@@ -124,6 +129,7 @@ func InsertToken(userIdx int, token string) error {
 		SET
 		    token = ?,
 			user_idx = ?`
+
 	_, err := db.DB.Exec(query, token, userIdx)
 
 	if err != nil {

@@ -12,8 +12,7 @@ var serviceMode string
 
 func init() {
 	//환경 변수
-	serviceHome := os.Getenv("homePath")
-	f, err := ini.Load(serviceHome + "release/config/bebecare-go-api-1.ini")
+	f, err := ini.Load("utils/config/bebecare-go-api-1.ini")
 	if err != nil {
 		panic(err)
 	}
@@ -23,9 +22,9 @@ func init() {
 	if strings.Contains(hostname, "bebecare-real") {
 		serviceMode = "product"
 	}
-	fmt.Println("===========================")
+	fmt.Println("=============================================")
 	fmt.Println("  bebecare go api 1 configuration  ")
-	fmt.Println("===========================")
+	fmt.Println("=============================================")
 	section = f.Section(serviceMode)
 	keys := section.Keys()
 	for _, key := range keys {

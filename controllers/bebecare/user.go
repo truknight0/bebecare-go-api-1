@@ -1,11 +1,11 @@
 package bebecare
 
 import (
-	"bebecare-go-api-1/beans"
 	"bebecare-go-api-1/beans/constants"
 	"bebecare-go-api-1/beans/db_object"
 	"bebecare-go-api-1/beans/global"
-	"bebecare-go-api-1/beans/user"
+	"bebecare-go-api-1/beans/protocols"
+	"bebecare-go-api-1/beans/protocols/user"
 	"bebecare-go-api-1/db"
 	"bebecare-go-api-1/models/children"
 	"bebecare-go-api-1/models/invite"
@@ -21,7 +21,7 @@ var isFirstUser bool
 
 func GetUserInfo(c *gin.Context) {
 	response := user.GetUserResponse{
-		BaseResponse: beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)},
+		BaseResponse: protocols.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)},
 	}
 
 	// 유저정보 가져오기
@@ -60,7 +60,7 @@ func GetUserInfo(c *gin.Context) {
 }
 
 func CheckUser(c *gin.Context) {
-	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+	response := protocols.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
 
 	// 유저정보 가져오기
 	userInfo, err := userModel.GetUserInfoWithToken(global.UserToken)
@@ -81,7 +81,7 @@ func CheckUser(c *gin.Context) {
 
 func LoginUser(c *gin.Context) {
 	response := user.CheckUserResponse{
-		BaseResponse: beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)},
+		BaseResponse: protocols.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)},
 	}
 
 	trx, _ := db.DB.Beginx()
@@ -190,7 +190,7 @@ func LoginUser(c *gin.Context) {
 }
 
 func ModifyUser(c *gin.Context) {
-	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+	response := protocols.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
 
 	request := new(user.ModifyUserRequest)
 	err := c.BindJSON(&request)
@@ -219,7 +219,7 @@ func ModifyUser(c *gin.Context) {
 }
 
 func DisconnectUser(c *gin.Context) {
-	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+	response := protocols.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
 
 	request := new(user.DisconnectUserRequest)
 	err := c.BindJSON(&request)
@@ -273,7 +273,7 @@ func DisconnectUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+	response := protocols.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
 
 	trx, _ := db.DB.Beginx()
 	defer trx.Rollback()

@@ -1,15 +1,15 @@
 package user
 
 import (
-	"bebecare-go-api-1/beans"
+	"bebecare-go-api-1/beans/protocols"
 )
 
 type GetUserResponse struct {
-	beans.BaseResponse
+	protocols.BaseResponse
 }
 
 type CheckUserResponse struct {
-	beans.BaseResponse
+	protocols.BaseResponse
 }
 
 type GetUserInfoData struct {

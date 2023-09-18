@@ -1,13 +1,13 @@
 package bebecare
 
 import (
-	"bebecare-go-api-1/beans"
 	"bebecare-go-api-1/beans/constants"
 	"bebecare-go-api-1/beans/db_object"
 	"bebecare-go-api-1/beans/global"
-	"bebecare-go-api-1/beans/invite"
+	"bebecare-go-api-1/beans/protocols"
+	"bebecare-go-api-1/beans/protocols/invite"
 	"bebecare-go-api-1/db"
-	childrenModel "bebecare-go-api-1/models/children"
+	"bebecare-go-api-1/models/children"
 	"bebecare-go-api-1/models/invite"
 	"bebecare-go-api-1/models/user"
 	"bebecare-go-api-1/utils"
@@ -18,7 +18,7 @@ import (
 
 // MakeInviteCode 초대코드 생성
 func MakeInviteCode(c *gin.Context) {
-	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+	response := protocols.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
 
 	request := new(invite.MakeInviteCodeRequest)
 	err := c.BindJSON(&request)
@@ -76,7 +76,7 @@ func MakeInviteCode(c *gin.Context) {
 
 // JoinInviteCode 초대코드로 등록하기
 func JoinInviteCode(c *gin.Context) {
-	response := beans.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
+	response := protocols.BaseResponse{Code: constants.SUCCESS, Message: constants.GetResponseMsg(constants.SUCCESS)}
 
 	request := new(invite.JoinInviteCodeRequest)
 	err := c.BindJSON(&request)

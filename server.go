@@ -12,17 +12,6 @@ func main() {
 	g := gin.New()
 	g.Use(gin.Logger())
 
-	//mux := http.NewServeMux()
-	//mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	//	w.Header().Set("Access-Control-Allow-Origin", "*")
-	//})
-	//
-	//// cors.Default() setup the middleware with default options being
-	//// all origins accepted with simple methods (GET, POST). See
-	//// documentation below for more options.
-	//handler := cors.Default().Handler(mux)
-	//http.ListenAndServe(":8080", handler)
-
 	// ROUTE Setting
 	bebecareNoAuthAPI := g.Group("/api/bebecare/noauth/")
 	bebecareNoAuthAPI.Use(middleware.AccessPass())
@@ -38,8 +27,20 @@ func main() {
 		bebecareMainAPI.POST("/user/info", bebecare.GetUserInfo)
 		bebecareMainAPI.POST("/user/modify", bebecare.ModifyUser)
 		bebecareMainAPI.POST("/user/delete", bebecare.DeleteUser)
+
 		bebecareMainAPI.POST("/parents/disconnect", bebecare.DisconnectUser)
+
+		bebecareMainAPI.POST("/children/info", bebecare.GetChildrenInfo)
 		bebecareMainAPI.POST("/children/insert", bebecare.InsertChildren)
+		bebecareMainAPI.POST("/children/modify", bebecare.ModifyChildren)
+		bebecareMainAPI.POST("/children/delete", bebecare.DeleteChildren)
+
+		bebecareMainAPI.POST("/items/list", bebecare.GetItemList)
+		bebecareMainAPI.POST("/items/insert", bebecare.InsertItem)
+		bebecareMainAPI.POST("/items/complete", bebecare.CompleteItem)
+		bebecareMainAPI.POST("/items/modify", bebecare.ModifyItem)
+		bebecareMainAPI.POST("/items/delete", bebecare.DeleteItem)
+
 		bebecareMainAPI.POST("/invite/make", bebecare.MakeInviteCode)
 		bebecareMainAPI.POST("/invite/join", bebecare.JoinInviteCode)
 	}

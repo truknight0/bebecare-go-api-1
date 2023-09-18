@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"bebecare-go-api-1/beans"
 	"bebecare-go-api-1/beans/constants"
 	"bebecare-go-api-1/beans/global"
+	"bebecare-go-api-1/beans/protocols"
 	"bebecare-go-api-1/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -14,7 +14,7 @@ const TokenType = "Bearer"
 
 func CreateTokenAuthorizer() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		response := new(beans.BaseResponse)
+		response := new(protocols.BaseResponse)
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
 			response.Code = constants.ERR_LOGIN_UNAUTHORIZED_TOKEN

@@ -1,4 +1,4 @@
-package beans
+package protocols
 
 import (
 	"bebecare-go-api-1/utils/log"
