@@ -20,7 +20,7 @@ type GetUserInfoData struct {
 	Phone       string      `json:"phone"`
 	Role        string      `json:"role"`
 	IsPushAgree int         `json:"is_push_agree"`
-	UserType    string      `json:"user_type"`
+	UserType    interface{} `json:"user_type"`
 	CreatedAt   string      `json:"created_at"`
 	InviteCode  int         `json:"invite_code"`
 	Children    interface{} `json:"children"`

@@ -5,12 +5,19 @@ import (
 	"bebecare-go-api-1/service/middleware"
 	"bebecare-go-api-1/utils/config"
 	"bebecare-go-api-1/utils/log"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	g := gin.New()
-	g.Use(gin.Logger())
+	//g.Use(gin.Logger())
+	g.Use(cors.New(
+		cors.Config{
+			AllowOrigins: []string{"http://localhost:8000"},
+			AllowHeaders: []string{"Content-Type", "Authorization"},
+			AllowMethods: []string{"POST", "GET", "OPTION"},
+		}))
 
 	// ROUTE Setting
 	bebecareNoAuthAPI := g.Group("/api/bebecare/noauth/")
