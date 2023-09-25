@@ -8,7 +8,7 @@ import (
 	"bebecare-go-api-1/beans/protocols/user"
 	"bebecare-go-api-1/db"
 	"bebecare-go-api-1/models/children"
-	inviteModel "bebecare-go-api-1/models/invite"
+	"bebecare-go-api-1/models/invite"
 	"bebecare-go-api-1/models/user"
 	"bebecare-go-api-1/utils"
 	"bebecare-go-api-1/utils/http_util"
