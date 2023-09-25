@@ -87,6 +87,18 @@ func JoinInviteCode(c *gin.Context) {
 		return
 	}
 
+	var token = global.UserToken
+	userInfo, err := userModel.GetUserInfoWithToken(token) // 초대받은 유저 정보 가져오기
+
+	// 초대코드 생성자인지 확인. 생성자는 초대코드로 가입 불가!
+	checkUserIdx, err := inviteModel.CheckInviteCodeMaker(request.InviteCode, userInfo.Idx)
+	if checkUserIdx != 0 {
+		response.Code = constants.ERR_INVITE_CODE_MAKER_JOIN
+		response.Message = constants.GetResponseMsg(constants.ERR_INVITE_CODE_MAKER_JOIN)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
 	// 난수검증
 	inviteInfo, err := inviteModel.GetInviteCodeInfo(request.InviteCode)
 	if err != nil {
@@ -100,8 +112,6 @@ func JoinInviteCode(c *gin.Context) {
 	defer trx.Rollback()
 
 	// 초대데이터 등록
-	var token = global.UserToken
-	userInfo, err := userModel.GetUserInfoWithToken(token) // 초대받은 유저 정보 가져오기
 	insertData := new(db_object.RelInviteCodeAndUser)
 	insertData.Trx = trx
 	insertData.InviteCode = inviteInfo.InviteCode

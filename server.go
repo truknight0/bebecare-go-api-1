@@ -11,12 +11,12 @@ import (
 
 func main() {
 	g := gin.New()
-	//g.Use(gin.Logger())
+	g.Use(gin.Logger())
 	g.Use(cors.New(
 		cors.Config{
-			AllowOrigins: []string{"http://localhost:8000"},
+			AllowOrigins: []string{"http://localhost:8000", "http://3.39.235.12:8000"},
 			AllowHeaders: []string{"Content-Type", "Authorization"},
-			AllowMethods: []string{"POST", "GET", "OPTION"},
+			AllowMethods: []string{"POST", "GET", "PUT", "PATCH", "DELETE", "OPTION"},
 		}))
 
 	// ROUTE Setting

@@ -8,7 +8,7 @@ import (
 	"bebecare-go-api-1/beans/protocols/user"
 	"bebecare-go-api-1/db"
 	"bebecare-go-api-1/models/children"
-	"bebecare-go-api-1/models/invite"
+	inviteModel "bebecare-go-api-1/models/invite"
 	"bebecare-go-api-1/models/user"
 	"bebecare-go-api-1/utils"
 	"bebecare-go-api-1/utils/http_util"
@@ -32,12 +32,18 @@ func GetUserInfo(c *gin.Context) {
 		http_util.JsonResponse(c, http.StatusOK, response)
 		return
 	}
+
 	// 아이정보 가져오기
 	childrenInfo, _ := childrenModel.GetUserChildrenList(userInfo.Idx)
 	// 초대코드 가져오기
 	inviteCodeInfo, _ := inviteModel.GetInviteCodeInfoWithUserIdx(userInfo.Idx)
 	// 엮인 가족 정보 가져오기
-	parents, _ := inviteModel.GetUserListWithInviteCode(global.UserToken, inviteCodeInfo.InviteCode)
+	var parents interface{}
+	var inviteCode interface{}
+	if inviteCodeInfo != nil {
+		parents, _ = inviteModel.GetUserListWithInviteCode(global.UserToken, inviteCodeInfo.InviteCode)
+		inviteCode = inviteCodeInfo.InviteCode
+	}
 
 	isFirstUser = false
 	userData := user.GetUserInfoData{
@@ -50,7 +56,7 @@ func GetUserInfo(c *gin.Context) {
 		IsPushAgree: userInfo.IsPushAgree,
 		UserType:    userInfo.UserType,
 		CreatedAt:   userInfo.CreatedAt,
-		InviteCode:  inviteCodeInfo.InviteCode,
+		InviteCode:  inviteCode,
 		Children:    childrenInfo,
 		Parents:     parents}
 
@@ -202,6 +208,7 @@ func ModifyUser(c *gin.Context) {
 	}
 
 	modifyData := new(db_object.ModifyUser)
+	modifyData.Idx = request.Idx
 	modifyData.Name = request.Name
 	modifyData.Phone = request.Phone
 	modifyData.Role = request.Role

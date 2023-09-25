@@ -104,6 +104,24 @@ func GetInviteCodeInfo(inviteCode int) (*db_object.GetInviteCodeInfo, error) {
 	return inviteCodeInfo, nil
 }
 
+func CheckInviteCodeMaker(inviteCode, userIdx int) (int, error) {
+	var checkUserIdx int
+
+	query := `
+		SELECT user_idx
+		FROM invite_code
+		WHERE invite_code = ?
+			AND user_idx = ?`
+
+	err := db.DB.Get(&checkUserIdx, query, inviteCode, userIdx)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return 0, err
+	}
+	return checkUserIdx, nil
+}
+
 func GetInviteCodeInfoWithUserIdx(userIdx int) (*db_object.GetInviteCodeInfo, error) {
 	inviteCodeInfo := new(db_object.GetInviteCodeInfo)
 

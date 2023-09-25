@@ -22,6 +22,7 @@ const ERR_LOGIN_UNAUTHORIZED_TOKEN = 2001
 
 // 초대
 const ERR_INVITE_CODE = 3000
+const ERR_INVITE_CODE_MAKER_JOIN = 3001
 
 func GetResponseMsg(code int) string {
 	//status := ""
@@ -53,6 +54,8 @@ func GetResponseMsg(code int) string {
 		message = "ERR_DB_EXIST_DATA"
 	case ERR_INVITE_CODE:
 		message = "올바르지 않은 초대코드 입니다."
+	case ERR_INVITE_CODE_MAKER_JOIN:
+		message = "초대코드 생성자는 초대코드로 가입할 수 없습니다."
 	default:
 		message = "api system error"
 	}

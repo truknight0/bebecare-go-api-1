@@ -1,6 +1,8 @@
 package db_object
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/jmoiron/sqlx"
+)
 
 type UserInfo struct {
 	Idx         int    `db:"idx" json:"idx"`
@@ -12,14 +14,14 @@ type UserInfo struct {
 }
 
 type UserInfoWithToken struct {
-	Idx         int         `db:"idx" json:"idx"`
-	Name        string      `db:"name" json:"name"`
-	Phone       string      `db:"phone" json:"phone"`
-	Role        string      `db:"role" json:"role"`
-	IsPushAgree int         `db:"is_push_agree" json:"is_push_agree"`
-	UserType    interface{} `db:"user_type" json:"user_type"`
-	Token       string      `db:"token" json:"token"`
-	CreatedAt   string      `db:"created_at" json:"created_at"`
+	Idx         int    `db:"idx" json:"idx"`
+	Name        string `db:"name" json:"name"`
+	Phone       string `db:"phone" json:"phone"`
+	Role        string `db:"role" json:"role"`
+	IsPushAgree int    `db:"is_push_agree" json:"is_push_agree"`
+	UserType    string `db:"user_type" json:"user_type"`
+	Token       string `db:"token" json:"token"`
+	CreatedAt   string `db:"created_at" json:"created_at"`
 }
 
 type InsertUser struct {

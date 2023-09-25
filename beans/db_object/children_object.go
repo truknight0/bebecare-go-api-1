@@ -27,14 +27,14 @@ type ModifyChildren struct {
 }
 
 type GetUserChildrenInfo struct {
-	Idx      int    `json:"idx" db:"idx"`
-	Name     string `json:"name" db:"name"`
-	Birthday string `json:"birthday" db:"birthday"`
-	Gender   string `json:"gender" db:"gender"`
-	Tall     string `json:"tall" db:"tall"`
-	Weight   string `json:"weight" db:"weight"`
-	HeadSize string `json:"head_size" db:"head_size"`
-	ImageUrl string `json:"image_url" db:"image_url"`
+	Idx      int         `json:"idx" db:"idx"`
+	Name     string      `json:"name" db:"name"`
+	Birthday string      `json:"birthday" db:"birthday"`
+	Gender   string      `json:"gender" db:"gender"`
+	Tall     string      `json:"tall" db:"tall"`
+	Weight   string      `json:"weight" db:"weight"`
+	HeadSize string      `json:"head_size" db:"head_size"`
+	ImageUrl interface{} `json:"image_url" db:"image_url"`
 }
 
 type DeleteChildren struct {
