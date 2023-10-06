@@ -126,11 +126,11 @@ func GetInviteCodeInfoWithUserIdx(userIdx int) (*db_object.GetInviteCodeInfo, er
 	inviteCodeInfo := new(db_object.GetInviteCodeInfo)
 
 	query := `
-		SELECT ic.invite_code,
-		       ic.user_idx,
+		SELECT ric.invite_code,
+		       ric.user_idx,
 		       us.name
-		FROM invite_code AS ic
-		LEFT JOIN user AS us ON ic.user_idx = us.idx
+		FROM rel_invite_code_user AS ric
+		LEFT JOIN user AS us ON ric.user_idx = us.idx
 		WHERE us.idx = ?`
 
 	err := db.DB.Get(inviteCodeInfo, query, userIdx)

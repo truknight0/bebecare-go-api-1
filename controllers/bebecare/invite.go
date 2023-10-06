@@ -55,18 +55,26 @@ func MakeInviteCode(c *gin.Context) {
 		http_util.JsonResponse(c, http.StatusOK, response)
 		return
 	}
+
+	trx, _ := db.DB.Beginx()
+	defer trx.Rollback()
+
 	insertData := new(db_object.RelInviteCodeAndUser)
+	insertData.Trx = trx
 	insertData.InviteCode = inviteCode
 	insertData.UserIdx = userInfo.Idx
 	insertData.UserName = userInfo.Name
 	insertData.UserRole = userInfo.Role
 	err = inviteModel.RelInviteCodeAndUser(insertData) // 난수와 유저 연결
 	if err != nil {
+		trx.Rollback()
 		response.Code = constants.ERR_DB_INSERT_DATA
 		response.Message = constants.GetResponseMsg(constants.ERR_DB_INSERT_DATA)
 		http_util.JsonResponse(c, http.StatusOK, response)
 		return
 	}
+
+	trx.Commit()
 
 	jsonInviteCode := invite.MakeInviteCodeResponse{InviteCode: inviteCode}
 	response.Data = jsonInviteCode
