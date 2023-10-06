@@ -97,6 +97,22 @@ func GetChildrenInfo(c *gin.Context) {
 		return
 	}
 
+	// 아이를 등록한 부모인지 확인
+	parentData, err := userModel.GetUserInfoWithToken(global.UserToken)
+	if err != nil {
+		response.Code = constants.ERR_DB_NODATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_NODATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	checkCount, _ := childrenModel.CheckRelParentChildren(parentData.Idx, request.Idx)
+	if checkCount == 0 {
+		response.Code = constants.ERR_PROCESS_USER_AUTH
+		response.Message = constants.GetResponseMsg(constants.ERR_PROCESS_USER_AUTH)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
 	childrenInfo, err := childrenModel.GetChildrenInfo(request.Idx)
 	if err != nil {
 		response.Code = constants.ERR_DB_NODATA
@@ -118,6 +134,22 @@ func ModifyChildren(c *gin.Context) {
 	if err != nil || !request.IsValidParameter() {
 		response.Code = constants.ERR_MSG_INVALID_PARAMETER
 		response.Message = constants.GetResponseMsg(constants.ERR_MSG_INVALID_PARAMETER)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+
+	// 아이를 등록한 부모만 수정 가능하므로 자격이 있는지 확인
+	parentData, err := userModel.GetUserInfoWithToken(global.UserToken)
+	if err != nil {
+		response.Code = constants.ERR_DB_NODATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_NODATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	checkCount, _ := childrenModel.CheckRelParentChildren(parentData.Idx, request.Idx)
+	if checkCount == 0 {
+		response.Code = constants.ERR_PROCESS_USER_AUTH
+		response.Message = constants.GetResponseMsg(constants.ERR_PROCESS_USER_AUTH)
 		http_util.JsonResponse(c, http.StatusOK, response)
 		return
 	}

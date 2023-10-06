@@ -22,9 +22,14 @@ type GetUserInfoData struct {
 	IsPushAgree int         `json:"is_push_agree"`
 	UserType    string      `json:"user_type"`
 	CreatedAt   string      `json:"created_at"`
-	InviteCode  interface{} `json:"invite_code"`
+	InviteCode  int         `json:"invite_code"`
 	Children    interface{} `json:"children"`
 	Parents     interface{} `json:"parents"`
+}
+
+type CheckUserData struct {
+	Idx          int         `json:"idx"`
+	ChildrenList interface{} `json:"children_list"`
 }
 
 type SetUserToken struct {

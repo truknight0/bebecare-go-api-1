@@ -1,9 +1,12 @@
 package constants
 
 const SUCCESS = 200
+
 const ERR_FAIL = 400
 
 const ERR_MSG_INVALID_PARAMETER = 9000
+
+const ERR_PROCESS_USER_AUTH = 9100
 
 const ERR_PROCESS_USER_LEVEL = 9900
 
@@ -34,6 +37,8 @@ func GetResponseMsg(code int) string {
 		message = "api system error"
 	case ERR_MSG_INVALID_PARAMETER:
 		message = "필수 입력항목이 누락되었습니다."
+	case ERR_PROCESS_USER_AUTH:
+		message = "올바르지 않은 접근이거나 권한이 없습니다."
 	case ERR_PROCESS_USER_LEVEL:
 		message = "실행 권한이 없습니다."
 	case ERR_LOGIN_NOTHING_TOKEN:

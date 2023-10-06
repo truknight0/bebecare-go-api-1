@@ -96,6 +96,25 @@ func GetChildrenInfo(idx int) (*db_object.GetUserChildrenInfo, error) {
 	return childrenInfo, nil
 }
 
+func CheckRelParentChildren(userIdx, childrenIdx int) (int, error) {
+	var count int
+
+	query := `
+		SELECT COUNT(*) AS count
+		FROM rel_parent_children
+		WHERE
+			user_idx = ?
+			AND children_idx = ?`
+
+	err := db.DB.Get(&count, query, userIdx, childrenIdx)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return 0, err
+	}
+	return count, nil
+}
+
 func GetUserChildrenList(userIdx int) ([]db_object.GetUserChildrenInfo, error) {
 	var childrenInfo []db_object.GetUserChildrenInfo
 

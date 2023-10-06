@@ -96,6 +96,19 @@ func ModifyItem(c *gin.Context) {
 	modifyData.Etc5 = request.Etc5
 	modifyData.Etc6 = request.Etc6
 	modifyData.Etc7 = request.Etc7
+	// request end_time 값이 없으면 기존 데이터의 end_time 세팅
+	itemInfo, err := itemsModel.GetItemInfo(request.Idx)
+	if err != nil {
+		response.Code = constants.ERR_DB_NODATA
+		response.Message = constants.GetResponseMsg(constants.ERR_DB_NODATA)
+		http_util.JsonResponse(c, http.StatusOK, response)
+		return
+	}
+	if request.EndTime == nil || request.EndTime == "" {
+		modifyData.EndTime = itemInfo.EndTime
+	} else {
+		modifyData.EndTime = request.EndTime
+	}
 
 	err = itemsModel.ModifyItem(modifyData)
 	if err != nil {

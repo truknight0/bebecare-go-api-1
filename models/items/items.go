@@ -43,7 +43,8 @@ func ModifyItem(modifyRequest *db_object.ModifyItem) error {
 			etc4 = :etc4,
 			etc5 = :etc5,
 			etc6 = :etc6,
-			etc7 = :etc7
+			etc7 = :etc7,
+			end_time = :end_time
 		WHERE
 		    idx = :idx`
 
@@ -73,6 +74,46 @@ func CompleteItem(idx int) error {
 	return nil
 }
 
+func GetItemInfo(idx int) (*db_object.GetItemList, error) {
+	itemInfo := new(db_object.GetItemList)
+
+	query := `
+		SELECT idx,
+			user_idx,
+			children_idx,
+			type,
+			CASE 
+			    WHEN (type = 'A') THEN '모유'
+			    WHEN (type = 'B') THEN '분유'
+			    WHEN (type = 'C') THEN '이유식'
+			    WHEN (type = 'D') THEN '소변'
+			    WHEN (type = 'E') THEN '대변'
+			    WHEN (type = 'F') THEN '낮잠'
+			    WHEN (type = 'G') THEN '밤잠'
+			    ELSE NULL
+			END AS name,
+			etc1,
+			etc2,
+			etc3,
+			etc4,
+			etc5,
+			etc6,
+			etc7,
+			DATE_FORMAT(start_time, '%Y-%m-%d %H:%i:%s') AS start_time,
+			DATE_FORMAT(end_time, '%Y-%m-%d %H:%i:%s') AS end_time
+		FROM  items
+		WHERE
+		    idx = ?`
+
+	err := db.DB.Get(itemInfo, query, idx)
+
+	if err != nil {
+		log.ERROR(err.Error())
+		return nil, err
+	}
+	return itemInfo, nil
+}
+
 func GetItemList(childrenIdx int, itemType string, searchDate string) ([]db_object.GetItemList, error) {
 	var itemList []db_object.GetItemList
 
@@ -91,6 +132,16 @@ func GetItemList(childrenIdx int, itemType string, searchDate string) ([]db_obje
 			user_idx,
 			children_idx,
 			type,
+			CASE 
+			    WHEN (type = 'A') THEN '모유'
+			    WHEN (type = 'B') THEN '분유'
+			    WHEN (type = 'C') THEN '이유식'
+			    WHEN (type = 'D') THEN '소변'
+			    WHEN (type = 'E') THEN '대변'
+			    WHEN (type = 'F') THEN '낮잠'
+			    WHEN (type = 'G') THEN '밤잠'
+			    ELSE NULL
+			END AS name,
 			etc1,
 			etc2,
 			etc3,
@@ -103,7 +154,7 @@ func GetItemList(childrenIdx int, itemType string, searchDate string) ([]db_obje
 		FROM  items
 		WHERE
 		    children_idx = ?` + typeQuery + searchDateQuery + `
-		ORDER BY created_at DESC`
+		ORDER BY created_at DESC, idx DESC`
 
 	err := db.DB.Select(&itemList, query, childrenIdx)
 

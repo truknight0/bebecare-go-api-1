@@ -39,7 +39,7 @@ func GetUserInfo(c *gin.Context) {
 	inviteCodeInfo, _ := inviteModel.GetInviteCodeInfoWithUserIdx(userInfo.Idx)
 	// 엮인 가족 정보 가져오기
 	var parents interface{}
-	var inviteCode interface{}
+	var inviteCode = 0
 	if inviteCodeInfo != nil {
 		parents, _ = inviteModel.GetUserListWithInviteCode(global.UserToken, inviteCodeInfo.InviteCode)
 		inviteCode = inviteCodeInfo.InviteCode
@@ -79,8 +79,11 @@ func CheckUser(c *gin.Context) {
 	// 아이정보 가져오기
 	childrenInfo, _ := childrenModel.GetUserChildrenList(userInfo.Idx)
 
-	isFirstUser = false
-	response.Data = childrenInfo
+	checkUserData := user.CheckUserData{
+		Idx:          userInfo.Idx,
+		ChildrenList: childrenInfo}
+
+	response.Data = checkUserData
 
 	http_util.JsonResponse(c, http.StatusOK, response)
 }
