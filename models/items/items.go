@@ -44,6 +44,7 @@ func ModifyItem(modifyRequest *db_object.ModifyItem) error {
 			etc5 = :etc5,
 			etc6 = :etc6,
 			etc7 = :etc7,
+			start_time = :start_time,
 			end_time = :end_time
 		WHERE
 		    idx = :idx`
