@@ -16,15 +16,16 @@ type InsertItem struct {
 }
 
 type ModifyItem struct {
-	Idx     int         `db:"idx"`
-	Etc1    interface{} `db:"etc1"`
-	Etc2    interface{} `db:"etc2"`
-	Etc3    interface{} `db:"etc3"`
-	Etc4    interface{} `db:"etc4"`
-	Etc5    interface{} `db:"etc5"`
-	Etc6    interface{} `db:"etc6"`
-	Etc7    interface{} `db:"etc7"`
-	EndTime interface{} `db:"end_time"`
+	Idx       int         `db:"idx"`
+	Etc1      interface{} `db:"etc1"`
+	Etc2      interface{} `db:"etc2"`
+	Etc3      interface{} `db:"etc3"`
+	Etc4      interface{} `db:"etc4"`
+	Etc5      interface{} `db:"etc5"`
+	Etc6      interface{} `db:"etc6"`
+	Etc7      interface{} `db:"etc7"`
+	StartTime interface{} `db:"start_time"`
+	EndTime   interface{} `db:"end_time"`
 }
 
 type GetItemList struct {

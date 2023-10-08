@@ -104,6 +104,11 @@ func ModifyItem(c *gin.Context) {
 		http_util.JsonResponse(c, http.StatusOK, response)
 		return
 	}
+	if request.StartTime == nil || request.StartTime == "" {
+		modifyData.StartTime = itemInfo.StartTime
+	} else {
+		modifyData.StartTime = request.StartTime
+	}
 	if request.EndTime == nil || request.EndTime == "" {
 		modifyData.EndTime = itemInfo.EndTime
 	} else {

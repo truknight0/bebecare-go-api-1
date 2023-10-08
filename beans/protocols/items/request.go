@@ -34,15 +34,16 @@ func (request *CompleteItemRequest) IsValidParameter() bool {
 }
 
 type ModifyItemRequest struct {
-	Idx     int         `json:"idx"`
-	Etc1    interface{} `json:"etc1"`
-	Etc2    interface{} `json:"etc2"`
-	Etc3    interface{} `json:"etc3"`
-	Etc4    interface{} `json:"etc4"`
-	Etc5    interface{} `json:"etc5"`
-	Etc6    interface{} `json:"etc6"`
-	Etc7    interface{} `json:"etc7"`
-	EndTime interface{} `json:"end_time"`
+	Idx       int         `json:"idx"`
+	Etc1      interface{} `json:"etc1"`
+	Etc2      interface{} `json:"etc2"`
+	Etc3      interface{} `json:"etc3"`
+	Etc4      interface{} `json:"etc4"`
+	Etc5      interface{} `json:"etc5"`
+	Etc6      interface{} `json:"etc6"`
+	Etc7      interface{} `json:"etc7"`
+	StartTime interface{} `json:"start_time"`
+	EndTime   interface{} `json:"end_time"`
 }
 
 func (request *ModifyItemRequest) IsValidParameter() bool {

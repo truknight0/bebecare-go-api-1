@@ -154,7 +154,7 @@ func GetItemList(childrenIdx int, itemType string, searchDate string) ([]db_obje
 		FROM  items
 		WHERE
 		    children_idx = ?` + typeQuery + searchDateQuery + `
-		ORDER BY created_at DESC, idx DESC`
+		ORDER BY start_time DESC, idx DESC`
 
 	err := db.DB.Select(&itemList, query, childrenIdx)
 
