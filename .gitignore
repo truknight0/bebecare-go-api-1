@@ -49,3 +49,5 @@ Thumbs.db
 
 server
 logs
+bin
+pkg
