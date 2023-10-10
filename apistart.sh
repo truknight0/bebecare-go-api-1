@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export BEBECARE_GO_API_1_HOME=/var/www/bebecare/bebecare-go-api-1
-SERVICE_NAME=bebecare-go-api-1
+SERVICE_NAME=bin/bebecare-go-api-1
 
 DATE=`date`
 
