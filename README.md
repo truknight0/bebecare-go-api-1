@@ -1,59 +1,49 @@
 # Bebecare api with Golang
 
-이 api 는 go 1.20.6 version 으로 개발 되었습니다.
+이 api 는 go 1.20.6 version 으로 개발되었습니다.
 
 이 api 는 http 통신을 위해 go.gin web framework 를 사용하였습니다.
+
+이 api 는 local 과 dev 환경을 제공합니다. 자세한 사항은 Etc 항목을 참고하십시오.
 
 ## Install go
 
 go 최신버전 설치를 위해 다음의 절차를 따르십시오.
 
 https://go.dev/dl/ 로 이동하여 자신의 개발환경에 맞는 버전을 받아 설치하십시오.
-(본 예제 에서는 개발에 사용된 1.20.6 버전 설치를 예문으로 사용합니다. 최신 버전 확인은 다음의 링크에서 확인하십시오. https://go.dev/dl/)
+
+설치 후 다음을 수행하여 정상적으로 설치되었는지 확인하십시오.
 
 ```bash
-cd bebecare-mobile-web #project location
-npm install
-npm run local
+go version #go version go1.20.6 darwin/arm64
+go env #golang evironment variables list
 ```
 
-api 서비스를 binary 로 build하여 실행하기 위해 다음을 수행하십시오.
+운영체제에 따른 `GOPATH` 설정은 운영체제별 `GOPATH 설정` 을 검색하십시오. (ex : mac gopath 설정)
 
-(이 서비스는 golang 설치가 필수적으로 요구됩니다. 다음의 링크로 이동해 node.js 설치 후 하단의 절차를 따르십시오. https://nodejs.org/ko)
+## API Startup
 
+go 소스를 빌드하여 바이너리 파일을 생성하고 실행하기 위해 다음을 수행하십시오. (윈도우의 경우 bash 프로그램 혹은 cmd 를 활용하십시오.)
 
 ```bash
-cd bebecare-mobile-web #project location
-npm install
-npm run local
+cd bebecare-go-api-1 #project location
+go get
+go build server.go
 ```
 
-## Dev server service up
-
-dev server 환경에서 서비스를 실행하기 위해 하단의 절차를 따르십시오.
-
-(해당 서비스는 Ubuntu 18.04 및 20.04 에서 테스트 되었습니다.)
+바이너리 파일명을 변경할 경우 다음의 명령어를 사용하십시오.
 
 ```bash
-cd bebecare-mobile-web #project location
-npm install
-npm run build-dev
+go build -o {binary file name} server.go
+#ex: go build -o bin/apiserver server.go
 ```
 
-npm background 실행을 위해 빌드 전 다음을 수행하십시오.
-
+## Etc
+* 각 서비스 환경에 따른 환경변수 설정은 utils/config/bebecare-go-api-1.ini 파일을 참고하십시오.
+* 다음의 쉘 스크립트 파일 apistart.sh 은 실행된 바이너리 파일을 자동으로 종료, 실행하는 기능을 수행합니다. 
+* 배포시 자동으로 바이너리 파일의 실행 프로세스를 종료하고 재시작 하기위해 다음의 명령어를 이용하십시오.
 ```bash
-(nohup npm run build-dev &)
-```
-
-## Etc...
-
-* 각 서비스 환경에 따라 .env 파일을 제공합니다. 해당 환경에 대한 설정은 rollup.config.js 파일을 확인하십시오.
-* npm 패키지 버전에 대한 상세한 내용은 지원하지 않습니다. 호환성 오류는 npm update 를 참고하십시오.
-* nohup 에 의한 process 실행을 중단할 경우 다음을 참고하십시오.
-```bash
-ps -ef | grep node* #search for node process to this project directory
-kill -9 {PID}
+sh apistart.sh
 ```
 
 END
