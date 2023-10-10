@@ -4,7 +4,7 @@
 
 이 api 는 http 통신을 위해 go.gin web framework 를 사용하였습니다.
 
-이 api 는 local 과 dev 환경을 제공합니다. 자세한 사항은 Etc 항목을 참고하십시오.
+이 api 는 local 과 dev 환경을 제공합니다.
 
 ## Install go
 
@@ -39,7 +39,6 @@ go build -o {binary file name} server.go
 ```
 
 ## Etc
-* 각 서비스 환경에 따른 환경변수 설정은 utils/config/bebecare-go-api-1.ini 파일을 참고하십시오.
 * 다음의 쉘 스크립트 파일 apistart.sh 은 실행된 바이너리 파일을 자동으로 종료, 실행하는 기능을 수행합니다. 
 * 배포시 자동으로 바이너리 파일의 실행 프로세스를 종료하고 재시작 하기위해 다음의 명령어를 이용하십시오.
 ```bash
