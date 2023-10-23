@@ -91,6 +91,7 @@ func GetItemInfo(idx int) (*db_object.GetItemList, error) {
 			    WHEN (type = 'E') THEN '대변'
 			    WHEN (type = 'F') THEN '낮잠'
 			    WHEN (type = 'G') THEN '밤잠'
+			    WHEN (type = 'H') THEN '약'
 			    ELSE NULL
 			END AS name,
 			etc1,
@@ -141,6 +142,7 @@ func GetItemList(childrenIdx int, itemType string, searchDate string) ([]db_obje
 			    WHEN (type = 'E') THEN '대변'
 			    WHEN (type = 'F') THEN '낮잠'
 			    WHEN (type = 'G') THEN '밤잠'
+			    WHEN (type = 'H') THEN '약'
 			    ELSE NULL
 			END AS name,
 			etc1,
