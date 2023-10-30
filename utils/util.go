@@ -76,7 +76,7 @@ func MakeInviteCodeUnique() int {
 
 	// 중복이면 재귀
 	if checkDupCode == true {
-		MakeInviteCodeUnique()
+		return MakeInviteCodeUnique()
 	}
 
 	return inviteCode
